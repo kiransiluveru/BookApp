@@ -6,66 +6,71 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
+  StyleSheet,
+  useColorScheme,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
+  Button,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
+import {Provider} from 'react-redux';
+import Counter from './Components/Counter';
+import store from './Components/Redux/Store';
+import Users from './Components/Users';
+console.log('store', store);
+// const Section = ({children, title}) => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <View style={styles.sectionContainer}>
+//       <Text
+//         style={[
+//           styles.sectionTitle,
+//           {
+//             color: isDarkMode ? Colors.white : Colors.black,
+//           },
+//         ]}>
+//         {title}
+//       </Text>
+//       <Text
+//         style={[
+//           styles.sectionDescription,
+//           {
+//             color: isDarkMode ? Colors.light : Colors.dark,
+//           },
+//         ]}>
+//         {children}
+//       </Text>
+//     </View>
+//   );
+// };
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [currentScreen, setCurrentScreen] = useState('counter');
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-      </ScrollView>
+      <Provider store={store}>
+        <Button
+          title={`Switch to ${
+            currentScreen === 'counter' ? 'Users Screen' : 'Counter Screen'
+          }`}
+          onPress={() => {
+            setCurrentScreen(currentScreen === 'counter' ? 'users' : 'counter');
+          }}
+        />
+        <Text />
+        {currentScreen === 'counter' ? <Counter /> : <Users />}
+      </Provider>
     </SafeAreaView>
   );
 };
